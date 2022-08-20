@@ -3,6 +3,8 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\LivewireTestController;
 use App\Http\Controllers\AlpineTestController;
+use App\Http\Controllers\EventTestController;
+use Barryvdh\Debugbar\DataCollector\EventCollector;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,16 +31,15 @@ Route::middleware([
     })->name('dashboard');
 });
 
-Route::prefix('manager')
-->middleware('can:manager-higher')
-->group(function(){
-    Route::get('index', function () {
-        dd('manager');
-    });
+// Gateで作成した権限名 -【manager-higher】
+// manager/indexにアクセスしたユーザーのrole値が1〜5だったらアクセス許可
+Route::prefix('manager')->middleware('can:manager-higher')->group(function(){
+    Route::resource('events', EventCollector::class);
 });
 
-Route::middleware('can:user-higher')
-->group(function(){
+// Gateで作成した権限名 -【user-higher】
+// indexにアクセスしたユーザーのrole値が1〜9だったらアクセス許可
+Route::middleware('can:user-higher')->group(function(){
     Route::get('index', function () {
         dd('user');
     });
