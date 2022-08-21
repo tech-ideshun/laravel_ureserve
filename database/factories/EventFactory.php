@@ -17,6 +17,7 @@ class EventFactory extends Factory
     public function definition()
     {
 
+        // fakerのdateTimeThisMonthは戻り値がDateTime型なので変数に入れてformat、modifyメソッドで加工などできる
         $dummyDate = $this->faker->dateTimeThisMonth;
 
         return [
