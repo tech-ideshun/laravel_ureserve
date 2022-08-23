@@ -5,6 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
+// アクセサの読み込み用
+use Illuminate\Database\Eloquent\Casts\Attribute;
+use Carbon\Carbon;
+
 class Event extends Model
 {
     use HasFactory;
@@ -17,4 +21,33 @@ class Event extends Model
         'end_date',
         'is_visible'
     ];
+
+    // ↓アクセサの定義
+
+    /**
+     * @return Eventテーブルの開始日を年月日に加工したもの
+     */
+    protected function eventDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Carbon::parse($this->start_date)->format('Y年m月d日'),
+        );
+    }
+
+    /**
+     * @return Eventテーブルの開始時間を時分に加工したもの
+     */
+    protected function startTime(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Carbon::parse($this->start_date)->format('H時i分'),
+        );
+    }
+
+    protected function endTime(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Carbon::parse($this->end_date)->format('H時i分'),
+        );
+    }
 }

@@ -7,7 +7,7 @@ use App\Http\Requests\UpdateEventRequest;
 use App\Models\Event;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
-use App\Services\Eventservices;
+use App\Services\EventService;
 
 class EventController extends Controller
 {
@@ -50,7 +50,7 @@ class EventController extends Controller
         // ->whereTime('start_date', '<', $request['end_time'])
         // ->exists(); // 返り値：真偽値
 
-        $check = EventServices::checkEventDuplication($request['event_date'], $request['start_time'], $request['end_time']);
+        $check = EventService::checkEventDuplication($request['event_date'], $request['start_time'], $request['end_time']);
 
         // dd($check);
         if($check) {
@@ -61,12 +61,12 @@ class EventController extends Controller
         // $start = $request['event_date'] . " " . $request['start_time'];
         // $start_date = Carbon::createFromFormat('Y-m-d H:i', $start);
 
-        $start_date = EventServices::joinDateAndTime($request['event_date'], $request['start_time']);
+        $start_date = EventService::joinDateAndTime($request['event_date'], $request['start_time']);
 
         // $end = $request['event_date'] . " " . $request['end_time'];
         // $end_date = Carbon::createFromFormat('Y-m-d H:i', $end);
 
-        $end_date = EventServices::joinDateAndTime($request['event_date'], $request['end_time']);
+        $end_date = EventService::joinDateAndTime($request['event_date'], $request['end_time']);
 
         Event::create([
             'name' => $request['event_name'],
@@ -82,15 +82,16 @@ class EventController extends Controller
         return to_route('events.index');
     }
 
-    /**
-     * Display the specified resource.
-     *
-     * @param  \App\Models\Event  $event
-     * @return \Illuminate\Http\Response
-     */
     public function show(Event $event)
     {
-        //
+        $event = Event::findOrFail($event->id);
+        $eventDate = $event->eventDate;
+        $startTime = $event->startTime;
+        $endTime = $event->endTime;
+
+        // dd($eventDate, $startTime, $endTime);
+
+        return view('manager.events.show', compact('event', 'eventDate', 'startTime', 'endTime'));
     }
 
     /**
