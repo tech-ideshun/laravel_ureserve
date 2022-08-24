@@ -35,6 +35,16 @@ class Event extends Model
     }
 
     /**
+     * @return Eventテーブルの開始日を更新用にフォーマットされたもの
+     */
+    protected function editEventDate(): Attribute
+    {
+        return Attribute::make(
+            get: fn() => Carbon::parse($this->start_date)->format('Y-m-d'),
+        );
+    }
+
+    /**
      * @return Eventテーブルの開始時間を時分に加工したもの
      */
     protected function startTime(): Attribute

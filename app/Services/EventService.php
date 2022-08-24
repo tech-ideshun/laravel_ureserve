@@ -19,6 +19,16 @@ class EventService
         // return $check;   直でreturnもできる
     }
 
+    public static function countEventDuplication($eventDate, $startTime, $endTime)
+    {
+        return DB::table('events')
+            ->whereDate('start_date', $eventDate)
+            ->whereTime('end_date', '>', $startTime)
+            ->whereTime('start_date', '<', $endTime)
+            ->count(); // 返り値：該当する件数
+
+    }
+
     public static function joinDateAndTime($date, $time)
     {
         $join = $date . " " . $time;
