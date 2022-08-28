@@ -52,4 +52,14 @@ class EventService
         ->orderBy('start_date', 'asc')
         ->get();
     }
+
+    public static function countReservePeople($eventId)
+    {
+        return DB::table('reservations')
+        ->select('event_id', DB::raw('sum(number_of_people) as number_of_people'))
+        ->whereNull('canceled_date')
+        ->groupBy('event_id')
+        ->having('event_id', $eventId)
+        ->first();
+    }
 }

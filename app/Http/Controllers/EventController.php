@@ -15,20 +15,20 @@ class EventController extends Controller
     {
         $today = Carbon::today();
 
-        // $reservedPeople = DB::table('reservations')
-        // ->select('event_id', DB::raw('sum(number_of_people) as number_of_people'))
-        // ->whereNull('canceled_date')
-        // ->groupBy('event_id');
+        $reservedPeople = DB::table('reservations')
+        ->select('event_id', DB::raw('sum(number_of_people) as number_of_people'))
+        ->whereNull('canceled_date')
+        ->groupBy('event_id');
 
-        // // dd($reservedPeople);
+        // dd($reservedPeople);
 
-        // $events = DB::table('events')
-        // ->leftJoinSub($reservedPeople, 'reservedPeople', function ($join){
-        //     $join->on('events.id', '=', 'reservedPeople.event_id');
-        // })
-        // ->whereDate('start_date', '>=', $today) // 今日より以前の日程は表示させない
-        // ->orderBy('start_date', 'asc')
-        // ->paginate(10);
+        $events = DB::table('events')
+        ->leftJoinSub($reservedPeople, 'reservedPeople', function ($join){
+            $join->on('events.id', '=', 'reservedPeople.event_id');
+        })
+        ->whereDate('start_date', '>=', $today) // 今日より以前の日程は表示させない
+        ->orderBy('start_date', 'asc')
+        ->paginate(10);
         // ->get();
         // dd($events);
 
