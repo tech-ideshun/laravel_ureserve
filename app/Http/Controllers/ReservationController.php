@@ -33,7 +33,12 @@ class ReservationController extends Controller
             $reservablePeople = $event->max_people;
         }
 
-        return view('event-detail', compact('event', 'reservablePeople'));
+        $isReserved = Reservation::where('user_id', '=', Auth::id())
+        ->where('event_id', '=', $id)
+        ->latest()
+        ->first();
+
+        return view('event-detail', compact('event', 'reservablePeople', 'isReserved'));
     }
 
     public function reserve(Request $request)
@@ -52,7 +57,7 @@ class ReservationController extends Controller
 
             session()->flash('status', '登録okです');
             return to_route('dashboard');
-            
+
         } else {
             session()->flash('status', 'この人数は予約できません。');
             return view('dashboard');

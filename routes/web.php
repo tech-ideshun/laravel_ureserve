@@ -6,6 +6,7 @@ use App\Http\Controllers\AlpineTestController;
 use App\Http\Controllers\EventController;
 use App\Http\Controllers\EventTestController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\MyPageController;
 
 
 /*
@@ -45,6 +46,9 @@ Route::prefix('manager')->middleware('can:manager-higher')->group(function(){
 // indexにアクセスしたユーザーのrole値が1〜9だったらアクセス許可
 Route::middleware('can:user-higher')->group(function(){
     Route::get('/dashboard', [ReservationController::class, 'dashboard'])->name('dashboard');
+    Route::get('/mypage', [MyPageController::class, 'index'])->name('mypage.index');
+    Route::get('/mypage/{id}', [MyPageController::class, 'show'])->name('mypage.show');
+    Route::post('/mypage/{id}', [MyPageController::class, 'cancel'])->name('mypage.cancel');
     Route::get('/{id}', [ReservationController::class, 'detail'])->name('events.detail');
     Route::post('/{id}', [ReservationController::class, 'reserve'])->name('events.reserve');
 });
